@@ -1,0 +1,219 @@
+swagger: '2.0'
+info:
+  title: "API Evangelist Dictionary API"
+  description: "This is my API for words. I often need a dictionary of english words, as well as other key phrases, tags, and word related resoiurces. This is my ApI fo organizing any word related resource in a single place."
+  termsOfService: "https://example.com/tos/"
+  contact:
+    name: API Evangelist
+    url: https://apievangelist.com
+    email: info@apievangelist.com
+  license:
+    name: Open Data Commons Public Domain
+    url: http://opendatacommons.org/licenses/pddl/
+  version: v1.2
+host: example.com
+basePath:
+schemes:
+- http
+produces:
+- application/json
+paths:
+  /words/:
+    get:
+      summary: Get Words
+      description: Get all words.
+      operationId: getWords
+      parameters:
+        - in: query
+          required: true
+          type: string
+          name: query
+          description: 'The query string'
+      security:
+        - api-key: []
+      responses:
+        '200':
+          description: Response
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/words"
+        '500':
+          description: Error Response
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/errorResponse"
+      tags:
+      - Words
+    post:
+      summary: Add Word
+      description: Add a word.
+      operationId: addWord
+      parameters:
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/word'
+      security:
+        - api-key: []
+      responses:
+        '200':
+          description: Success Response
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/words"
+        '403':
+          description: No Access Response
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/errorResponse"
+        '500':
+          description: Error Response
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/errorResponse"
+      tags:
+      - Words
+  /words/{word_id}/:
+    get:
+      summary: Get Word
+      description: Get a single word.
+      operationId: getWord
+      parameters:
+        - in: path
+          required: true
+          type: string
+          name: word_id
+          description: The uniqud id for the word.
+      security:
+        - api-key: []
+      responses:
+        '200':
+          description: Area Response
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/word"
+        '500':
+          description: Error Response
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/errorResponse"
+      tags:
+      - Words
+    put:
+      summary: Update Word
+      description: Update a word.
+      operationId: updateWord
+      parameters:
+        - in: path
+          required: true
+          type: string
+          name: word_id
+          description: The uniqud id for the word.
+        - in: body
+          name: body
+          schema:
+            $ref: '#/definitions/word'
+      security:
+        - api-key: []
+      responses:
+        '200':
+          description: Success Response
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/word"
+        '403':
+          description: No Access Response
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/errorResponse"
+        '500':
+          description: Error Response
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/errorResponse"
+      tags:
+      - Words
+    delete:
+      summary: Delete Word
+      description: Delete a word.
+      operationId: deleteWord
+      parameters:
+        - in: path
+          required: true
+          type: string
+          name: word_id
+          description: The uniqud id for the word.
+      security:
+        - api-key: []
+      responses:
+        '200':
+          description: Success Response
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/word"
+        '403':
+          description: No Access Response
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/errorResponse"
+        '500':
+          description: Error Response
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/errorResponse"
+      tags:
+      - Words
+securityDefinitions:
+  api-key:
+    type: apiKey
+    in: header
+    name: x-api-key
+definitions:
+  words:
+    title: words
+    description: All words.
+    type: object
+    properties:
+      word:
+        type: "array"
+        description: All of the words being returned.
+        items:
+          $ref: "#/definitions/word"
+  word:
+    title: Word
+    description: A word.
+    type: object
+    properties:
+      id:
+        description: The unique id for the word.
+        type: integer
+        maxLength: 11
+      word:
+        description: The word.
+        type: string
+        maxLength: 255
+    required:
+    - word_id
+    - word
+  errorResponse:
+    description: 'Describes an HTTP error returned'
+    properties:
+      code:
+        description: 'Repeat the HTTP status code'
+        type: integer
+      message:
+        description: 'A plain language message explaining the error'
+        type: integer
